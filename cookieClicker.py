@@ -133,6 +133,7 @@ class user:
             self.buildings[id] = self.buildings[id] + 1
             return 0
 
+    # Returns the CPS of the person
     def calculateCPS():
         cps = cps + (self.buildings[0] * 0.1)
         cps = cps + (self.buildings[1] * 1)
@@ -152,3 +153,8 @@ class user:
         cps = cps + (self.buildings[15] * 150000000000)
         cps = cps + (self.buildings[16] * 1100000000000)
         return cps
+
+    # Adds the cps to the person's total (designed to be called once per second)
+    def addCPS():
+        cps = calculateCPS()
+        self.cookies = self.cookies + cps
