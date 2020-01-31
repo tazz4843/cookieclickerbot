@@ -87,6 +87,7 @@ class user:
         self.python_ide = lines[19]
         # Just to keep file I/0 and RAM usage to a minimum, the file is closed early
         data.close()
+        # Creates a list that makes it MUCH easier to give the building id and count
         self.buildings = []
         j = 0
         i = 3
@@ -97,7 +98,7 @@ class user:
 
     # I know it's big. But it's fundamental to having happy users
     def save():
-        output = self.cookies + '\n' + self.cPC + '\n' + self.cPS + '\n' + self.cursor + '\n' + self.grandma + '\n' + self.farm + '\n' + self.mine + '\n' + self.factory + '\n' + self.bank + '\n' + self.temple + '\n' + self.wizard_tower + '\n' + self.shipment + '\n' + self.alchemy_lab + '\n' + self.portal + '\n' + self.time_machine + '\n' + self.antimatter_condenser + '\n' + self.prisim + '\n' + self.chancemaker + '\n' + self.fractal_engine + '\n' + self.python_ide
+        output = self.cookies + '\n' + self.cPC + '\n' + self.cPS + '\n' + self.buildings[0] + '\n' + self.buildings[1] + '\n' + self.buildings[2] + '\n' + self.buildings[3] + '\n' + self.buildings[4] + '\n' + self.buildings[5] + '\n' + self.buildings[6] + '\n' + self.buildings[7] + '\n' + self.buildings[8] + '\n' + self.buildings[9] + '\n' + self.buildings[10] + '\n' + self.buildings[11] + '\n' + self.buildings[12] + '\n' + self.buildings[13] + '\n' + self.buildings[14] + '\n' + self.buildings[15] + '\n' + self.buildings[16]
         print('Saving u/' + self.username + "'s profile")
         outFile = open(self.username + '.txt', 'w')
         outFile.write(output)
