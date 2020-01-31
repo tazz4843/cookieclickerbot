@@ -85,7 +85,15 @@ class user:
         self.chancemaker = lines[17]
         self.fractal_engine = lines[18]
         self.python_ide = lines[19]
+        # Just to keep file I/0 and RAM usage to a minimum, the file is closed early
         data.close()
+        self.buildings = []
+        j = 0
+        i = 3
+        while i < 20:
+            self.buildings[j] = lines[i]
+            i = i + 1
+            j = j + 1
 
     # I know it's big. But it's fundamental to having happy users
     def save():
@@ -105,9 +113,9 @@ class user:
         message = 'Hello, u/' + self.username + '!\n\n You have ' + str(self.cookies) + ' cookies, and are getting ' + str(self.cPS) + ' cookies per second. You gain ' + str(self.cPC) + ' cookies per click.\n\n^I\'m ^u/CookieClickerBOT, ^created ^by ^u/tazz4843 ^to ^bring ^cookie ^happines ^to ^reddit!''
         return message
 
-    # Takes one of the building counts as a input and the other input is the id of the building. that can be found in ./ids.txt
-    def getUpgradePrice(item, id):
-        upgrades = item + 1
+    # Input is the id of the building
+    def getUpgradePrice(id):
+        upgrades = self.buildings[id] + 1
         for i in range(upgrades):
             price = price * 1.15
         return price
