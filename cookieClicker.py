@@ -118,9 +118,37 @@ class user:
     def getUpgradePrice(id):
         upgrades = self.buildings[id] + 1
         for i in range(upgrades):
+            # Actual cookie clicker algorithim (simple, right?)
             price = price * 1.15
         return price
 
     # Upgrades the building with the id number once. to upgrade more times, this function must be called multiple times
     def upgrade(id):
-        self.getUpgradePrice(self.id)
+        price = self.getUpgradePrice(id)
+        self.cookies = self.cookies - price
+        if self.cookies < 0:
+            self.cookies = self.cookies + price
+            return 1
+        else:
+            self.buildings[id] = self.buildings[id] + 1
+            return 0
+
+    def calculateCPS():
+        cps = cps + (self.buildings[0] * 0.1)
+        cps = cps + (self.buildings[1] * 1)
+        cps = cps + (self.buildings[2] * 8)
+        cps = cps + (self.buildings[3] * 47)
+        cps = cps + (self.buildings[4] * 260)
+        cps = cps + (self.buildings[5] * 1400)
+        cps = cps + (self.buildings[6] * 7800)
+        cps = cps + (self.buildings[7] * 44000)
+        cps = cps + (self.buildings[8] * 260000)
+        cps = cps + (self.buildings[9] * 1600000)
+        cps = cps + (self.buildings[10] * 10000000)
+        cps = cps + (self.buildings[11] * 65000000)
+        cps = cps + (self.buildings[12] * 430000000)
+        cps = cps + (self.buildings[13] * 2900000000)
+        cps = cps + (self.buildings[14] * 21000000000)
+        cps = cps + (self.buildings[15] * 150000000000)
+        cps = cps + (self.buildings[16] * 1100000000000)
+        return cps
