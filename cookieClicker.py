@@ -1,4 +1,18 @@
 # The module file behind the cookie clicker bot (u/CookieClickerBOT)!
+# Copyright (C) 2020 u/tazz4843
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 version = '0.0.0alpha'
 
@@ -44,8 +58,26 @@ def getNewPosts():
             message.mark_read()
         read.close()
 
-def postComment(text, comment):
-    # Posts a comment
+# Posts a comment in reply to another comment
+def replyComment(text, idToReplyTo):
+    comment = reddit.comment(id=idToReplyTo)
+    try:
+        comment.reply(text)
+    except prawcore.exceptions.Forbidden:
+        print('Failed to reply to ' + idToReplyTo + '! Do you have permissions?')
+
+# Posts a comment in reply to a submission
+def replySubmission(text, idToReplyTo):
+    submission = reddit.submission(id=idToReplyTo)
+    try:
+        submission.reply(text)
+    except prawcore.exceptions.Forbidden:
+        print('Failed to reply to ' + idToReplyTo + '! Do you have permissions?')
+
+def checkMod(subName):
+    subreddit = reddit.subreddit(subName)
+    mod = subreddit.user_is_moderator
+    return mod
 
 def initUser(user):
     if not os.path.isfile(user + '.txt'):
@@ -135,6 +167,7 @@ class user:
 
     # Returns the CPS of the person
     def calculateCPS():
+        # I know static variables are not the way to go, but don't forget I'm trying to get a release out with just basic functions
         cps = cps + (self.buildings[0] * 0.1)
         cps = cps + (self.buildings[1] * 1)
         cps = cps + (self.buildings[2] * 8)
