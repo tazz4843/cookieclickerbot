@@ -16,7 +16,7 @@
 
 version = '0.0.0alpha'
 
-import praw, pickle, os
+import praw, time
 
 # Just a function to declutter the main file
 def init(user, password, id, secret):
@@ -54,11 +54,14 @@ def getNewPosts():
                 break
             # But if it isn't, it writes the id to the file and begins checking that post
             else:
-                file.write(mention_id)
-                # This simplifies the function code, so plz don't be angry about my questionable practices
-                postsToCheck = open('posts.txt', 'a')
-                postsToCheck.write(mention_id)
-                postsToCheck.close()
+                # But, first, it has to see if the user is a mod.
+                submission = reddit.submission(id=mention_id)
+                if checkMod(submission.subreddit):
+                    file.write(mention_id)
+                    # This simplifies the function code, so plz don't be angry about my questionable practices
+                    postsToCheck = open('posts.txt', 'a')
+                    postsToCheck.write(mention_id)
+                    postsToCheck.close()
             message.mark_read()
         read.close()
 
@@ -103,21 +106,37 @@ def getNewCommands():
         submission.comments.replace_more(limit=None)
         for comment in submission.comments:
             commentId = comment.id
+            submitter = comment.author
             for id in ids:
-                if commentId = id:
+                if commentId == id:
                     success = True
                     break
             if not success:
+                body = comment.body
                 for string in commands:
-                    if string[0] in comment.body:
-                        runFunc(string[1], commentId)
+                    if string[0] in body:
+                        array.append([string[0],submitter,commentId])
                         file.write(comment.id + "\n")
                         break
     print('Finished checking all new posts!')
+    return array
 
 # Creates a class for users
 class user:
-    def __init__(user):
+    # I know it's big. But it's fundamental to having happy users
+    def save(self):
+        output = self.cookies + '\n' + self.cPC + '\n' + self.cPS + '\n' + self.buildings[0] + '\n' + self.buildings[1] + '\n' + self.buildings[2] + '\n' + self.buildings[3] + '\n' + self.buildings[4] + '\n' + self.buildings[5] + '\n' + self.buildings[6] + '\n' + self.buildings[7] + '\n' + self.buildings[8] + '\n' + self.buildings[9] + '\n' + self.buildings[10] + '\n' + self.buildings[11] + '\n' + self.buildings[12] + '\n' + self.buildings[13] + '\n' + self.buildings[14] + '\n' + self.buildings[15] + '\n' + self.buildings[16] + '\n' + self.newTime
+        print('Saving u/' + self.username + "'s profile")
+        outFile = open(self.username + '.txt', 'w')
+        outFile.write(output)
+        outFile.close()
+        print('Saved!')
+
+    # Hey, why isn't this in __init__? This makes it easier to change users loaded later on.
+    def newUser(self, user):
+        # This'll probably save someone from being overwritten
+        if self.username != None:
+            self.save()
         data = open(user + '.txt', 'r')
         lines = data.readlines()
         self.username = user
@@ -125,6 +144,10 @@ class user:
         self.cookies = lines[0]
         self.cPC = lines[1]
         self.cPS = lines[2]
+        # Gets time since last time this user was initalized. Reduces CPU load.
+        lastLogin = lines[20]
+        currentTime = int(time.strftime('%s'))
+        cpsNeeded = currentTime - lastLogin
         # Cursor id is 0
         self.cursor = lines[3]
         # Grandma id is 1
@@ -155,27 +178,22 @@ class user:
             self.buildings[j] = lines[i]
             i = i + 1
             j = j + 1
-
-    # I know it's big. But it's fundamental to having happy users
-    def save():
-        output = self.cookies + '\n' + self.cPC + '\n' + self.cPS + '\n' + self.buildings[0] + '\n' + self.buildings[1] + '\n' + self.buildings[2] + '\n' + self.buildings[3] + '\n' + self.buildings[4] + '\n' + self.buildings[5] + '\n' + self.buildings[6] + '\n' + self.buildings[7] + '\n' + self.buildings[8] + '\n' + self.buildings[9] + '\n' + self.buildings[10] + '\n' + self.buildings[11] + '\n' + self.buildings[12] + '\n' + self.buildings[13] + '\n' + self.buildings[14] + '\n' + self.buildings[15] + '\n' + self.buildings[16]
-        print('Saving u/' + self.username + "'s profile")
-        outFile = open(self.username + '.txt', 'w')
-        outFile.write(output)
-        outFile.close()
-        print('Saved!')
+        # Adds the required CPS to the user
+        for i in range(cpsNeeded):
+            addCPS()
+        self.newTime = int(time.strftime('%s'))
 
     # I really don't know why I need this function, but whatever.
-    def clickCookie():
+    def clickCookie(self):
         self.cookies = self.cookies + self.cookiesPerClick
 
     # Returns a reddit-ready stats comment
-    def stats():
+    def stats(self):
         message = 'Hello, u/' + self.username + '!\n\n You have ' + str(self.cookies) + ' cookies, and are getting ' + str(self.cPS) + ' cookies per second. You gain ' + str(self.cPC) + ' cookies per click.\n\n^I\'m ^u/CookieClickerBOT, ^created ^by ^u/tazz4843 ^to ^bring ^cookie ^happines ^to ^reddit!''
         return message
 
     # Input is the id of the building
-    def getUpgradePrice(id):
+    def getUpgradePrice(self, id):
         upgrades = self.buildings[id] + 1
         for i in range(upgrades):
             # Actual cookie clicker algorithim (simple, right?)
@@ -183,18 +201,18 @@ class user:
         return price
 
     # Upgrades the building with the id number once. to upgrade more times, this function must be called multiple times
-    def upgrade(id):
+    def upgrade(self, id):
         price = self.getUpgradePrice(id)
         self.cookies = self.cookies - price
         if self.cookies < 0:
             self.cookies = self.cookies + price
-            return 1
+            return False
         else:
             self.buildings[id] = self.buildings[id] + 1
-            return 0
+            return True
 
     # Returns the CPS of the person
-    def calculateCPS():
+    def calculateCPS(self):
         # I know static variables are not the way to go, but don't forget I'm trying to get a release out with just basic functions
         cps = cps + (self.buildings[0] * 0.1)
         cps = cps + (self.buildings[1] * 1)
@@ -216,6 +234,9 @@ class user:
         return cps
 
     # Adds the cps to the person's total (designed to be called once per second)
-    def addCPS():
+    def addCPS(self):
         cps = calculateCPS()
         self.cookies = self.cookies + cps
+
+if __name__ == '__main__':
+    print("You can't run this file! Run main.py instead.")
