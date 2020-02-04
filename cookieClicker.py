@@ -45,7 +45,7 @@ def getNewPosts():
         read_mentions = read.readlines()
         for message in mentions:
             # Gets current mention id
-            mention_id = message.id + "\n"
+            mention_id = message.id
             # Checks if mention id is in the mentions file, and if it is, skips the loop and exits
             for line in read_mentions:
                 if line == mention_id:
@@ -55,6 +55,10 @@ def getNewPosts():
             # But if it isn't, it writes the id to the file and begins checking that post
             else:
                 file.write(mention_id)
+                # This simplifies the function code, so plz don't be angry about my questionable practices
+                postsToCheck = open('posts.txt', 'a')
+                postsToCheck.write(mention_id)
+                postsToCheck.close()
             message.mark_read()
         read.close()
 
@@ -86,6 +90,30 @@ def initUser(user):
         print('initalized u/' + user + "'s profile!")
     else:
         print('user u/' + user + "'s profile already exists!")
+
+def getNewCommands():
+    post = open('posts.txt', 'r')
+    posts = post.readlines()
+    post.close()
+    replied = open('replied.txt', 'r')
+    ids = replied.readlines()
+    replied.close()
+    for item in posts:
+        submission = reddit.submission(id=item)
+        submission.comments.replace_more(limit=None)
+        for comment in submission.comments:
+            commentId = comment.id
+            for id in ids:
+                if commentId = id:
+                    success = True
+                    break
+            if not success:
+                for string in commands:
+                    if string[0] in comment.body:
+                        runFunc(string[1], commentId)
+                        file.write(comment.id + "\n")
+                        break
+    print('Finished checking all new posts!')
 
 # Creates a class for users
 class user:
