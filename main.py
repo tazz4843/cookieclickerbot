@@ -188,6 +188,11 @@ try:
                 else:
                     msg = "You don't have enough cookies! You need " + str(price) + " cookies to buy this building."
                     replyComment(msg, commentId)
+            elif id == 'stats':
+                stats = 0.stats()
+                replyComment(stats, commentId)
+            elif id == 'help':
+                help = "*u/CookieClickerBOT Help*\n\nI have a good amount of functions, for only being a early alpha release.\n\nCreate a top level comment with the command you want.\n\n\*`click`: clicks your cookie once.\n\n*`stats`: gives you your current stats\n\n*`up <building>`: adds one building with the name. the list of names is avalible further down.\n\n*List Of Buildings*\n\n*cursor: cursor\n\n*grandma: grandma\n\n*farm: farm\n\n*mine: mine\n\n*factory: factory\n\n*bank: bank\n\n*temple: temple\n\n*tower: wizard tower\n\n*shipment: shipment\n\n*lab: alchemy lab\n\n*portal: portal\n\n*time: time machine\n\n*condenser: antimatter condenser\n\n*prisim: prisim\n\n*chancemaker: chancemaker\n\n*engine: fractal engine\n\n*ide: python ide/javascript console"
             0.save()
 except KeyboardInterrupt:
     break
